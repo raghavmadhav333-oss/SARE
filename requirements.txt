@@ -1,0 +1,5 @@
+Pillow
+keyboard
+pystray
+edge-tts
+pygame-ce

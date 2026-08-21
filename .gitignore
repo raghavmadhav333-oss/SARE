@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Temporary and local files
+*.log
+# config.json  # Note: You might want to provide a config.example.json instead
+.vscode/
+.idea/
+.DS_Store
+
+# Do not ignore assets, so others can clone and run immediately
+# images/
+# dialogues/
+# fonts/
