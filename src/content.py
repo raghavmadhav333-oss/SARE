@@ -28,6 +28,9 @@ class ContentManager:
         
         self.image_history = deque(maxlen=no_repeat_history)
         self.dialogue_history = deque(maxlen=no_repeat_history)
+        
+        self.unplayed_images = []
+        self.unplayed_dialogues = []
 
     def get_all_images(self):
         if not self.images_dir.exists():
@@ -58,11 +61,19 @@ class ContentManager:
         if not images:
             return None
             
-        available = [img for img in images if img not in self.image_history]
-        if not available:
-            available = images
+        # Refill and shuffle the deck if empty
+        if not self.unplayed_images:
+            self.unplayed_images = list(images)
+            random.shuffle(self.unplayed_images)
             
-        choice = random.choice(available)
+            # Prevent immediate repeat from the previous deck
+            if len(self.unplayed_images) > self.no_repeat_history:
+                # We pop from the end, so check the last element
+                while self.unplayed_images[-1] in self.image_history:
+                    item = self.unplayed_images.pop()
+                    self.unplayed_images.insert(0, item)
+            
+        choice = self.unplayed_images.pop()
         self.image_history.append(choice)
         return choice
 
@@ -76,11 +87,19 @@ class ContentManager:
         if not audio_files:
             return (None, "System ready.")
             
-        available = [f for f in audio_files if f not in self.dialogue_history]
-        if not available:
-            available = audio_files
+        # Refill and shuffle the deck if empty
+        if not self.unplayed_dialogues:
+            self.unplayed_dialogues = list(audio_files)
+            random.shuffle(self.unplayed_dialogues)
             
-        choice = random.choice(available)
+            # Prevent immediate repeat from the previous deck
+            if len(self.unplayed_dialogues) > self.no_repeat_history:
+                # We pop from the end, so check the last element
+                while self.unplayed_dialogues[-1] in self.dialogue_history:
+                    item = self.unplayed_dialogues.pop()
+                    self.unplayed_dialogues.insert(0, item)
+            
+        choice = self.unplayed_dialogues.pop()
         self.dialogue_history.append(choice)
         
         # Get perfectly formatted text based on filename
